@@ -3,15 +3,13 @@ version: "3.8"
 services:
   mediamtx:
     image: bluenviron/mediamtx:latest
-    # Or specify a version tag if needed
     container_name: mediamtx
     ports:
-      - "8554:8554"   # RTSP
-      - "1935:1935"   # RTMP
-      - "8888:8888"   # HLS
-    # (MediaMTX also has webRTC and SRT ports if you need them)
+      - "8554:8554"    # RTSP
+      # Additional ports if you need RTMP, HLS, WebRTC, etc.
     restart: always
 
+  # The container that streams 3 videos
   rtsp-streamer:
     build: ./rtsp-streamer
     container_name: rtsp-streamer
@@ -20,6 +18,10 @@ services:
     volumes:
       - ./assets/mock-videos:/videos
     environment:
-      - VIDEO_FILE=video2.mp4
-      - STREAM_PATH=mystream2
+      - VIDEO_FILE_1=video1.mp4
+      - VIDEO_FILE_2=video2.mp4
+      - VIDEO_FILE_3=video3.mp4
+      - STREAM_PATH_1=stream1
+      - STREAM_PATH_2=stream2
+      - STREAM_PATH_3=stream3
     restart: always
