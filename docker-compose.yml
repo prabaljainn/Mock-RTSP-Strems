@@ -4,17 +4,8 @@ services:
     image: aler9/rtsp-simple-server
     ports:
       - "8554:8554"
-
-  rtsp-streamer1:
-    build: ./rtsp-streamer
-    depends_on:
-      - rtsp-server
-    volumes:
-      - ./assets/mock-videos:/videos
-    environment:
-      - VIDEO_FILE=video1.mp4
-      - STREAM_PATH=mystream1
-    restart: always
+    networks:
+      - rtsp-net
 
   rtsp-streamer2:
     build: ./rtsp-streamer
@@ -25,15 +16,10 @@ services:
     environment:
       - VIDEO_FILE=video2.mp4
       - STREAM_PATH=mystream2
+    networks:
+      - rtsp-net
     restart: always
 
-  rtsp-streamer3:
-    build: ./rtsp-streamer
-    depends_on:
-      - rtsp-server
-    volumes:
-      - ./assets/mock-videos:/videos
-    environment:
-      - VIDEO_FILE=video3.mp4
-      - STREAM_PATH=mystream3
-    restart: always
+networks:
+  rtsp-net:
+    driver: bridge
