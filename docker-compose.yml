@@ -1,25 +1,25 @@
 version: "3.8"
-services:
-  rtsp-server:
-    image: aler9/rtsp-simple-server
-    ports:
-      - "8554:8554"
-    networks:
-      - rtsp-net
 
-  rtsp-streamer2:
+services:
+  mediamtx:
+    image: bluenviron/mediamtx:latest
+    # Or specify a version tag if needed
+    container_name: mediamtx
+    ports:
+      - "8554:8554"   # RTSP
+      - "1935:1935"   # RTMP
+      - "8888:8888"   # HLS
+    # (MediaMTX also has webRTC and SRT ports if you need them)
+    restart: always
+
+  rtsp-streamer:
     build: ./rtsp-streamer
+    container_name: rtsp-streamer
     depends_on:
-      - rtsp-server
+      - mediamtx
     volumes:
       - ./assets/mock-videos:/videos
     environment:
       - VIDEO_FILE=video2.mp4
       - STREAM_PATH=mystream2
-    networks:
-      - rtsp-net
     restart: always
-
-networks:
-  rtsp-net:
-    driver: bridge
