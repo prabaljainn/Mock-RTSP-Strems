@@ -12,13 +12,13 @@ log "Starting RTSP streamer service..."
 log "Using video file: /videos/${VIDEO_FILE}"
 sleep 5
 
-# If your service is named 'mediamtx', then:
 STREAM_URL="rtsp://mediamtx:8554/${STREAM_PATH}"
 log "Streaming to URL: ${STREAM_URL}"
 
-# Re-encode the video from AV1 to H.264, audio to AAC:
+# -an removes audio; -r 30 enforces 30 fps output
 ffmpeg -re -stream_loop -1 \
   -i "/videos/${VIDEO_FILE}" \
   -c:v libx264 -preset ultrafast -tune zerolatency \
-  -c:a aac -ar 44100 \
+  -r 30 \
+  -an \
   -f rtsp "${STREAM_URL}" 2>&1 | tee -a "$LOG_FILE"
