@@ -1,13 +1,9 @@
-FROM jrottenberg/ffmpeg:4.4-alpine
+FROM alpine:3.20
+
+RUN apk add --no-cache ffmpeg
 
 WORKDIR /app
 
-# Override the default 'ffmpeg' entrypoint from the base image
-ENTRYPOINT []
+COPY --chmod=0755 stream.sh .
 
-# Copy in our custom streaming script
-COPY stream.sh .
-RUN chmod +x stream.sh
-
-# Let Docker run this script by default
 CMD ["./stream.sh"]
