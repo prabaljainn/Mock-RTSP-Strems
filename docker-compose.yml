@@ -5,12 +5,17 @@ services:
     image: bluenviron/mediamtx:latest
     container_name: mediamtx
     ports:
-      - "8554:8554"    # RTSP
-      # Additional ports if you need RTMP, HLS, WebRTC, etc.
+      - "8554:8554"          # RTSP
+      - "8888:8888"          # HLS (browser-friendly)
+      - "8889:8889"          # WebRTC signaling
+      - "8189:8189/udp"      # WebRTC media (ICE)
+      # - "1935:1935"        # RTMP (uncomment if you need it)
+      # - "8890:8890/udp"    # SRT (uncomment if you need it)
     restart: always
 
   # The container that streams 3 videos
   rtsp-streamer:
+    image: ghcr.io/prabaljainn/mock-rtsp-streamer:latest
     build: ./rtsp-streamer
     container_name: rtsp-streamer
     depends_on:
